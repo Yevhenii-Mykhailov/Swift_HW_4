@@ -1,0 +1,72 @@
+{
+    "count": 3,
+    "companyDescription": "John and CO",
+    "listOfData": [
+        {
+            "name": "iPhone",
+            "modelNumber": "14",
+            "countries": ["Belgium", "Katar", "Ukraine"],
+            "price": {
+                "regions": [
+                    {
+                        "name": "USD",
+                        "price": 600
+                    },
+                    {
+                        "name": "EUR",
+                        "price": 630
+                    },
+                    {
+                        "name": "UAH",
+                        "price": 14600
+                    }
+                ]
+            },
+            "year": 2022
+        },
+        {
+            "name": "Xiaomi",
+            "modelNumber": "XD 12 SE",
+            "countries": ["Germany", "France", "Poland"],
+            "price": {
+                "regions": [
+                    {
+                        "name": "USD",
+                        "price": 500
+                    },
+                    {
+                        "name": "EUR",
+                        "price": 530
+                    },
+                    {
+                        "name": "UAH",
+                        "price": 12200
+                    }
+                ]
+            },
+            "year": 2021
+        },
+        {
+            "name": "Samsung",
+            "modelNumber": "18_ S",
+            "countries": ["Sweden", "England", "USA"],
+            "price": {
+                "regions": [
+                    {
+                        "name": "USD",
+                        "price": 800
+                    },
+                    {
+                        "name": "EUR",
+                        "price": 840
+                    },
+                    {
+                        "name": "UAH",
+                        "price": 18500
+                    }
+                ]
+            },
+            "year": 2019
+        }
+    ]
+}
