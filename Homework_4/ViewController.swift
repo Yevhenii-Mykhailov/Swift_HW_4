@@ -10,10 +10,6 @@ import Alamofire
 
 
 class ViewController: UIViewController {
-//    let baseUrl = "https://api.themoviedb.org/3"
-//    let apiKey = "6c6fbdcb483c64a0da9365fb2a903d3e"
-//    let moovieId = 497
-    
     var topRatedResult: [String: Any] = [:]
     
     override func viewDidLoad() {

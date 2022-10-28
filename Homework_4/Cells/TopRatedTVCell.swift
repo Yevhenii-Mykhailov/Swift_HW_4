@@ -8,12 +8,10 @@
 import UIKit
 
 class TopRatedTVCell: UITableViewCell {
-    
     @IBOutlet weak var originalTitleLable: UILabel!
     @IBOutlet weak var popularityLable: UILabel!
     @IBOutlet weak var releaseDateLable: UILabel!
     @IBOutlet weak var overviewText: UITextView!
-    
     @IBOutlet weak var posterImageView: UIImageView!
     
     var originalTitle = ""
