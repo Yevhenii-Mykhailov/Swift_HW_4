@@ -9,7 +9,7 @@ import UIKit
 import Alamofire
 
 //MARK: Task 6
-class TopRatedViewController: UIViewController, UITableViewDataSource {
+class TopRatedViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var topRatedTableView: UITableView!
     
     let constants = Constants()
@@ -17,8 +17,7 @@ class TopRatedViewController: UIViewController, UITableViewDataSource {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        topRatedTableView.dataSource = self
+        self.setupTableView()
         
         AF.request("\(constants.baseUrl)/movie/top_rated?api_key=\(constants.apiKey)&language=en-US&page=1").responseDecodable(of: TopRatedModel.self) { response in
             guard let result = response.value else { return }
@@ -27,15 +26,34 @@ class TopRatedViewController: UIViewController, UITableViewDataSource {
         }
     }
     
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "TopRatedTVCell", for: indexPath) as? TopRatedTVCell{
+            let currentRow = indexPath.row
+            let urlToPosterImage = constants.urlToPosterImage + arrayOfTopRatedFilms[indexPath.row].posterPath
+            cell.originalTitle = arrayOfTopRatedFilms[currentRow].originalTitle
+            cell.popularity = String(arrayOfTopRatedFilms[indexPath.row].popularity)
+            cell.releaseDate = arrayOfTopRatedFilms[indexPath.row].releaseDate.leaveByOffset(offSet: 4)
+            cell.filmOverviewText = arrayOfTopRatedFilms[indexPath.row].overview
+            cell.posterImageView.load(stringUrl: urlToPosterImage)
+            return cell
+        }
+        
+        return UITableViewCell()
+    }
+    
+    private func setupTableView() {
+        let authorNameLable = UINib(nibName: "TopRatedTVCell",bundle: nil)
+        self.topRatedTableView.register(authorNameLable, forCellReuseIdentifier: "TopRatedTVCell")
+        
+        topRatedTableView.dataSource = self
+        topRatedTableView.delegate = self
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         arrayOfTopRatedFilms.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
-        let originalTitle = arrayOfTopRatedFilms[indexPath.row].originalTitle
-        let year = arrayOfTopRatedFilms[indexPath.row].releaseDate
-        cell.textLabel?.text = originalTitle + " - " + year.leaveByOffset(offSet: 4)
-        return cell
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        320
     }
 }

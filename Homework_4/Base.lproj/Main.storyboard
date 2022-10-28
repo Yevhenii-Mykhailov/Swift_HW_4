@@ -86,6 +86,22 @@
             </objects>
             <point key="canvasLocation" x="745" y="61"/>
         </scene>
+        <!--VC-->
+        <scene sceneID="Iid-22-6GT">
+            <objects>
+                <viewController id="YHZ-Vd-IrI" customClass="ViewController" customModule="Homework_4" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Qhn-VC-S3U">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="0gJ-oZ-B85"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="VC" id="EcQ-5Z-EDK"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cRj-w2-F6A" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-291" y="-786"/>
+        </scene>
         <!--Top Rated-->
         <scene sceneID="WXh-vx-9mq">
             <objects>
@@ -138,6 +154,7 @@
                         <segue destination="cy7-3N-sPR" kind="relationship" relationship="viewControllers" id="cKA-V5-Jnb"/>
                         <segue destination="rSI-BV-dFS" kind="relationship" relationship="viewControllers" id="fKb-f6-7o6"/>
                         <segue destination="yud-pW-561" kind="relationship" relationship="viewControllers" id="Cmm-nD-OBZ"/>
+                        <segue destination="YHZ-Vd-IrI" kind="relationship" relationship="viewControllers" id="FnQ-ZP-11B"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="afy-6Q-ToN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
