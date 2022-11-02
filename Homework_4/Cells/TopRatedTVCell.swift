@@ -18,7 +18,6 @@ class TopRatedTVCell: UITableViewCell {
     var popularity = ""
     var releaseDate = ""
     var filmOverviewText = ""
-    var posterPathUrl = ""
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -30,6 +29,5 @@ class TopRatedTVCell: UITableViewCell {
         popularityLable.text = popularity
         releaseDateLable.text = releaseDate
         overviewText.text = filmOverviewText
-        posterImageView.load(stringUrl: posterPathUrl)
     }
 }

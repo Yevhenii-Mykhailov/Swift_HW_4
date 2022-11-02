@@ -14,6 +14,7 @@ class TopRatedViewController: UIViewController, UITableViewDataSource, UITableVi
     
     let constants = Constants()
     var arrayOfTopRatedFilms: [TopRatedResult] = []
+    var arrayOfVideos: [VideosResults] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,6 +24,28 @@ class TopRatedViewController: UIViewController, UITableViewDataSource, UITableVi
             guard let result = response.value else { return }
             self.arrayOfTopRatedFilms = result.results
             self.topRatedTableView.reloadData()
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        guard let topRatedDetailsVC = storyboard.instantiateViewController(withIdentifier: "TopRatedDetailsViewController") as? TopRatedDetailsViewController else { return }
+        topRatedDetailsVC.topRatedMoview = arrayOfTopRatedFilms[indexPath.row]
+        
+        //TODO: Verify youtube video downloading
+        let movieId = arrayOfTopRatedFilms[indexPath.row].id
+        AF.request("\(constants.urlToVideo)/\(movieId)/videos?api_key=\(constants.apiKey)").responseDecodable(of: VideosModel.self) { response in
+            guard let resultData = response.value else { return }
+            let videos = resultData.results
+            let urlToPosterImage = self.constants.urlToPosterImage + self.arrayOfTopRatedFilms[indexPath.row].backdropPath
+            for video in videos {
+                if video.type == "Trailer" && video.official == true {
+                    topRatedDetailsVC.movieId = video.key
+                    topRatedDetailsVC.reloadInputViews()
+                }
+            }
+            
+            self.present(topRatedDetailsVC, animated: true)
         }
     }
     
