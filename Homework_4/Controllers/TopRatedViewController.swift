@@ -52,9 +52,11 @@ class TopRatedViewController: UIViewController {
 //            print(index)
 //            print(film)
 //        }
-        let result = topRateFilms[1]
+        if let result = topRateFilms.first {
+            return result
+        }
         
-        return result
+        return TopRatedModel ()
         
     }
     
