@@ -144,7 +144,7 @@
         <!--Film Details View Controller-->
         <scene sceneID="QwF-7Z-v1I">
             <objects>
-                <viewController storyboardIdentifier="TopRatedDetailsViewController" id="SYx-75-TFQ" customClass="FilmDetailsViewController" customModule="Homework_4" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="FilmDetailsViewController" id="SYx-75-TFQ" customClass="FilmDetailsViewController" customModule="Homework_4" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="1HC-DD-CkE">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
