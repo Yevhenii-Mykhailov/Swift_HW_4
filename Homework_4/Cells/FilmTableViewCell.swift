@@ -1,5 +1,5 @@
 //
-//  TopRatedTVCell.swift
+//  FilmTableViewCell.swift
 //  Homework_4
 //
 //  Created by Yevhenii M on 28.10.2022.
@@ -7,13 +7,13 @@
 
 import UIKit
 
-class TopRatedTVCell: UITableViewCell {
+class FilmTableViewCell: UITableViewCell {
     @IBOutlet weak var originalTitleLable: UILabel!
     @IBOutlet weak var popularityLable: UILabel!
     @IBOutlet weak var releaseDateLable: UILabel!
     @IBOutlet weak var overviewText: UITextView!
     @IBOutlet weak var posterImageView: UIImageView!
-    
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     var originalTitle = ""
     var popularity = ""
     var releaseDate = ""
@@ -21,6 +21,7 @@ class TopRatedTVCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        self.activityIndicator.hidesWhenStopped = true
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {

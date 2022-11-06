@@ -8,7 +8,6 @@
 import UIKit
 import Alamofire
 
-//MARK: Task 6
 class GenreViewController: UIViewController, UITableViewDataSource {
     @IBOutlet weak var genreTableView: UITableView!
     

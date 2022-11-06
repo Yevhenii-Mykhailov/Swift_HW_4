@@ -1,7 +1,6 @@
 
 import Foundation
 
-//MARK: Task 4, 5
 struct GenreModel: Codable {
     let genres: [Genre]
 }

@@ -15,7 +15,6 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //MARK: Task 3
         if let filePath = Bundle.main.url(forResource: "rawData", withExtension: "json") {
             do {
                 let data = try Data(contentsOf: filePath)

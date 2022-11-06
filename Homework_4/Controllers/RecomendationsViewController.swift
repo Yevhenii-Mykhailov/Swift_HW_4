@@ -8,12 +8,12 @@
 import UIKit
 import Alamofire
 
-//MARK: Task 6
 class RecomendationsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var recomendationsTableView: UITableView!
     
     let constants = Constants()
     var arrayOfRecomendations: [RecomendationResult] = []
+    var arrayOfVideos: [VideosResults] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,8 +27,28 @@ class RecomendationsViewController: UIViewController, UITableViewDataSource, UIT
             }
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        guard let topRatedDetailsVC = storyboard.instantiateViewController(withIdentifier: "FilmDetailsViewController") as? FilmDetailsViewController else { return }
+        topRatedDetailsVC.recomendationsMoview = arrayOfRecomendations[indexPath.row]
+        
+        let movieId = arrayOfRecomendations[indexPath.row].id
+        AF.request("\(constants.urlToVideo)/\(movieId)/videos?api_key=\(constants.apiKey)").responseDecodable(of: VideosModel.self) { response in
+            guard let resultData = response.value else { return }
+            let videos = resultData.results
+            for video in videos {
+                if video.type == "Trailer" && video.official == true {
+                    topRatedDetailsVC.movieId = video.key
+                    topRatedDetailsVC.reloadInputViews()
+                }
+            }
+            
+            self.present(topRatedDetailsVC, animated: true)
+        }
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let cell = tableView.dequeueReusableCell(withIdentifier: "TopRatedTVCell", for: indexPath) as? TopRatedTVCell{
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "FilmTableViewCell", for: indexPath) as? FilmTableViewCell{
             let currentRow = indexPath.row
             let urlToPosterImage = constants.urlToPosterImage + arrayOfRecomendations[indexPath.row].posterPath
             cell.originalTitle = arrayOfRecomendations[currentRow].originalTitle
@@ -43,8 +63,8 @@ class RecomendationsViewController: UIViewController, UITableViewDataSource, UIT
     }
     
     private func setupTableView() {
-        let authorNameLable = UINib(nibName: "TopRatedTVCell",bundle: nil)
-        self.recomendationsTableView.register(authorNameLable, forCellReuseIdentifier: "TopRatedTVCell")
+        let authorNameLable = UINib(nibName: "FilmTableViewCell",bundle: nil)
+        self.recomendationsTableView.register(authorNameLable, forCellReuseIdentifier: "FilmTableViewCell")
         
         recomendationsTableView.dataSource = self
         recomendationsTableView.delegate = self

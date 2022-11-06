@@ -7,13 +7,16 @@
 
 import UIKit
 import Alamofire
+import SwiftUI
+import RealmSwift
 
-//MARK: Task 6
-class TopRatedViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class TopRatedViewController: UIViewController {
     @IBOutlet weak var topRatedTableView: UITableView!
     
+    let realm = try! Realm()
     let constants = Constants()
-    var arrayOfTopRatedFilms: [TopRatedResult] = []
+    var arrayOfTopRatedFilms: [TopRatedRealmResult] = []
+    var arrayOfTopRatedFilmsRealm = TopRatedModel.create(page: 0, results: [], totalPages: 0, totalResults: 0)
     var arrayOfVideos: [VideosResults] = []
     
     override func viewDidLoad() {
@@ -22,35 +25,83 @@ class TopRatedViewController: UIViewController, UITableViewDataSource, UITableVi
         
         AF.request("\(constants.baseUrl)/movie/top_rated?api_key=\(constants.apiKey)&language=en-US&page=1").responseDecodable(of: TopRatedModel.self) { response in
             guard let result = response.value else { return }
-            self.arrayOfTopRatedFilms = result.results
-            self.topRatedTableView.reloadData()
+            self.arrayOfTopRatedFilmsRealm = result
+            self.addTopRatedFilmsToRealm(self.arrayOfTopRatedFilmsRealm)
+            
+            let filmsFromRealm = self.getTopRatedFilmsFromRealm().results
+            for film in filmsFromRealm {
+                self.arrayOfTopRatedFilms.append(film)
+                self.topRatedTableView.reloadData()
+            }
         }
     }
     
+    private func addTopRatedFilmsToRealm(_ filmResults: TopRatedModel) {
+        let topRatedFilms = filmResults
+        
+        try! realm.write({
+            realm.add(topRatedFilms)
+        })
+    }
+
+    private func getTopRatedFilmsFromRealm() -> TopRatedModel {
+        let topRateFilms = realm.objects(TopRatedModel.self)
+        
+        //index=0 - page0, index=1 = page1 ....
+//        for (index, film) in topRateFilms.enumerated() {
+//            print(index)
+//            print(film)
+//        }
+        let result = topRateFilms[1]
+        
+        return result
+        
+    }
+    
+    private func setupTableView() {
+        let authorNameLable = UINib(nibName: "FilmTableViewCell",bundle: nil)
+        self.topRatedTableView.register(authorNameLable, forCellReuseIdentifier: "FilmTableViewCell")
+        
+        topRatedTableView.dataSource = self
+        topRatedTableView.delegate = self
+    }
+    
+    private func deleteOldDb() {
+        do {
+            // Delete the realm if a migration would be required, instead of migrating it.
+            // While it's useful during development, do not leave this set to `true` in a production app!
+            let configuration = Realm.Configuration(deleteRealmIfMigrationNeeded: true)
+            let realm = try Realm(configuration: configuration)
+        } catch {
+            print("Error opening realm: \(error.localizedDescription)")
+        }
+    }
+}
+
+extension TopRatedViewController: UITableViewDataSource, UITableViewDelegate{
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        guard let topRatedDetailsVC = storyboard.instantiateViewController(withIdentifier: "TopRatedDetailsViewController") as? TopRatedDetailsViewController else { return }
+        guard let topRatedDetailsVC = storyboard.instantiateViewController(withIdentifier: "FilmDetailsViewController") as? FilmDetailsViewController else { return }
         topRatedDetailsVC.topRatedMoview = arrayOfTopRatedFilms[indexPath.row]
-        
-        //TODO: Verify youtube video downloading
+
         let movieId = arrayOfTopRatedFilms[indexPath.row].id
         AF.request("\(constants.urlToVideo)/\(movieId)/videos?api_key=\(constants.apiKey)").responseDecodable(of: VideosModel.self) { response in
             guard let resultData = response.value else { return }
             let videos = resultData.results
-            let urlToPosterImage = self.constants.urlToPosterImage + self.arrayOfTopRatedFilms[indexPath.row].backdropPath
             for video in videos {
                 if video.type == "Trailer" && video.official == true {
                     topRatedDetailsVC.movieId = video.key
                     topRatedDetailsVC.reloadInputViews()
                 }
             }
-            
+
             self.present(topRatedDetailsVC, animated: true)
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let cell = tableView.dequeueReusableCell(withIdentifier: "TopRatedTVCell", for: indexPath) as? TopRatedTVCell{
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "FilmTableViewCell", for: indexPath) as? FilmTableViewCell{
             let currentRow = indexPath.row
             let urlToPosterImage = constants.urlToPosterImage + arrayOfTopRatedFilms[indexPath.row].posterPath
             cell.originalTitle = arrayOfTopRatedFilms[currentRow].originalTitle
@@ -62,14 +113,6 @@ class TopRatedViewController: UIViewController, UITableViewDataSource, UITableVi
         }
         
         return UITableViewCell()
-    }
-    
-    private func setupTableView() {
-        let authorNameLable = UINib(nibName: "TopRatedTVCell",bundle: nil)
-        self.topRatedTableView.register(authorNameLable, forCellReuseIdentifier: "TopRatedTVCell")
-        
-        topRatedTableView.dataSource = self
-        topRatedTableView.delegate = self
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
