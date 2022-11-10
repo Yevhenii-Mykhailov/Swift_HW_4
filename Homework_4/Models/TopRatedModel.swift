@@ -94,4 +94,5 @@ class TopRatedRealmResult: EmbeddedObject, Decodable {
         case voteAverage = "vote_average"
         case voteCount = "vote_count"
     }
+    
 }

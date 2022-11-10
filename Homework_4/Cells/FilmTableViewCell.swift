@@ -18,6 +18,7 @@ class FilmTableViewCell: UITableViewCell {
     var popularity = ""
     var releaseDate = ""
     var filmOverviewText = ""
+    var arrayOfTopRatedFilms: [TopRatedRealmResult] = []
     
     override func awakeFromNib() {
         super.awakeFromNib()
