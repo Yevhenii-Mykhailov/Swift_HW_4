@@ -8,27 +8,23 @@
 import UIKit
 import Alamofire
 import SwiftUI
-import RealmSwift
 
-//TODO: Error when load more then 19 films
+
 class TopRatedViewController: UIViewController {
     @IBOutlet weak var topRatedTableView: UITableView!
     
-    let realm = try! Realm()
     let constants = Constants()
     var arrayOfTopRatedFilms: [TopRatedRealmResult] = []
     var arrayOfTopRatedFilmsRealm = TopRatedModel.create(page: 0, results: [], totalPages: 0, totalResults: 0)
     var arrayOfVideos: [VideosResults] = []
-    var pageNumber = 1
     var startPageNumber = 1
-    
+    var nextPageNumber = 1
     var isPaginationOn = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setupTableView()
-        
-        getAllFromRealm()
+        updateArrayOfTopRatedFilms()
         
         if arrayOfTopRatedFilms != [] {
             return
@@ -42,8 +38,8 @@ class TopRatedViewController: UIViewController {
         
         if pos > topRatedTableView.contentSize.height - 320 - scrollView.frame.size.height{
             if !isPaginationOn {
-                pageNumber += 1
-                getFilmsFromSource(pageNumber)
+                nextPageNumber += 1
+                getFilmsFromSource(nextPageNumber)
             } else{
                 return
             }
@@ -62,9 +58,20 @@ class TopRatedViewController: UIViewController {
         AF.request("\(constants.baseUrl)/movie/top_rated?api_key=\(constants.apiKey)&language=en-US&page=\(pageNumber)").responseDecodable(of: TopRatedModel.self) { response in
             guard let result = response.value else { return }
             self.arrayOfTopRatedFilmsRealm = result
-            self.addTopRatedFilmsToRealm(self.arrayOfTopRatedFilmsRealm)
-            self.getFilmsFromDbModel(dbModel: self.getFilmsByPageFromRealm(pageNumber))
+            RealmController().addTopRatedFilmsToRealm(self.arrayOfTopRatedFilmsRealm)
+            self.getFilmsFromDbModel(dbModel: RealmController().getFilmsByPageFromRealm(pageNumber))
             self.topRatedTableView.reloadData()
+        }
+    }
+    
+    private func updateArrayOfTopRatedFilms() {
+        let arrayOfModelsFromRealm = RealmController().getAllFromRealm()
+        for (index,item) in arrayOfModelsFromRealm.enumerated() {
+            let element = item.results
+            nextPageNumber = index + 1
+            for (_, film) in element.enumerated() {
+                arrayOfTopRatedFilms.append(film)
+            }
         }
     }
     
@@ -72,37 +79,6 @@ class TopRatedViewController: UIViewController {
         let filmsFromRealm = dbModel.results
         self.arrayOfTopRatedFilms.append(contentsOf: (0...19).map { index in filmsFromRealm[index]})
     }
-    
-    private func getAllFromRealm() {
-        let realmObject = realm.objects(TopRatedModel.self)
-        for (index ,item) in realmObject.enumerated() {
-            let films = item.results
-            pageNumber = index + 1
-            for (_ ,film) in films.enumerated() {
-                self.arrayOfTopRatedFilms.append(film)
-            }
-        }
-        
-    }
-    
-    private func getFilmsByPageFromRealm(_ pageNumber: Int) -> TopRatedModel {
-        let realmObject = realm.objects(TopRatedModel.self)
-        let ralmQuery = realmObject.where {
-            ($0.page == pageNumber)
-        }
-        guard let result = ralmQuery.first else { return TopRatedModel() }
-        
-        return result
-    }
-    
-    private func addTopRatedFilmsToRealm(_ filmResults: TopRatedModel) {
-        let topRatedFilms = filmResults
-        
-        try! realm.write({
-            realm.add(topRatedFilms)
-        })
-    }
-    
 }
 
 extension TopRatedViewController: UITableViewDataSource, UITableViewDelegate{
@@ -135,12 +111,12 @@ extension TopRatedViewController: UITableViewDataSource, UITableViewDelegate{
         if let cell = topRatedTableView.dequeueReusableCell(withIdentifier: "FilmTableViewCell", for: indexPath) as? FilmTableViewCell {
             
             let currentRow = indexPath.row
-            let urlToPosterImage = constants.urlToPosterImage + arrayOfTopRatedFilms[indexPath.row].posterPath
+//            let urlToPosterImage = constants.urlToPosterImage + arrayOfTopRatedFilms[indexPath.row].posterPath
             cell.originalTitle = arrayOfTopRatedFilms[currentRow].originalTitle
             cell.popularity = String(arrayOfTopRatedFilms[indexPath.row].popularity)
             cell.releaseDate = arrayOfTopRatedFilms[indexPath.row].releaseDate.leaveByOffset(offSet: 4)
             cell.filmOverviewText = arrayOfTopRatedFilms[indexPath.row].overview
-            cell.posterImageView.load(stringUrl: urlToPosterImage)
+//            cell.posterImageView.load(stringUrl: urlToPosterImage)
             return cell
         }
         

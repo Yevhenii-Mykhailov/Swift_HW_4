@@ -10,6 +10,7 @@
 		BE01043D290BD1CA008E8D2D /* FilmTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE01043B290BD1CA008E8D2D /* FilmTableViewCell.swift */; };
 		BE01043E290BD1CA008E8D2D /* FilmTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE01043C290BD1CA008E8D2D /* FilmTableViewCell.xib */; };
 		BE3C50A6291D8EEB000F6A6F /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = BE3C50A5291D8EEB000F6A6F /* Podfile */; };
+		BE3C50A8291DA2C1000F6A6F /* RealmController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3C50A7291DA2C1000F6A6F /* RealmController.swift */; };
 		BE66A2F42909C90000410E23 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE66A2F32909C90000410E23 /* Constants.swift */; };
 		BE66A2F62909CE2B00410E23 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE66A2F52909CE2B00410E23 /* Extensions.swift */; };
 		BE8A7C1F29119C5900CF3A29 /* FilmDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE8A7C1E29119C5900CF3A29 /* FilmDetailsViewController.swift */; };
@@ -37,6 +38,7 @@
 		BE01043B290BD1CA008E8D2D /* FilmTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmTableViewCell.swift; sourceTree = "<group>"; };
 		BE01043C290BD1CA008E8D2D /* FilmTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FilmTableViewCell.xib; sourceTree = "<group>"; };
 		BE3C50A5291D8EEB000F6A6F /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = SOURCE_ROOT; };
+		BE3C50A7291DA2C1000F6A6F /* RealmController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmController.swift; sourceTree = "<group>"; };
 		BE66A2F32909C90000410E23 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		BE66A2F52909CE2B00410E23 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		BE8A7C1E29119C5900CF3A29 /* FilmDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmDetailsViewController.swift; sourceTree = "<group>"; };
@@ -128,6 +130,7 @@
 				BED0E8CC2909A6B700CB9F83 /* RecomendationsViewController.swift */,
 				BED0E8CE2909A6DA00CB9F83 /* GenreViewController.swift */,
 				BE8A7C1E29119C5900CF3A29 /* FilmDetailsViewController.swift */,
+				BE3C50A7291DA2C1000F6A6F /* RealmController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -301,6 +304,7 @@
 				BED0DF2A291BF2A2001D6B3B /* testPagination.swift in Sources */,
 				BEFEB55F2907C9CD00611978 /* AppDelegate.swift in Sources */,
 				BE66A2F62909CE2B00410E23 /* Extensions.swift in Sources */,
+				BE3C50A8291DA2C1000F6A6F /* RealmController.swift in Sources */,
 				BEFEB5612907C9CD00611978 /* SceneDelegate.swift in Sources */,
 				BEC82D8A29083204008EED91 /* Company.swift in Sources */,
 				BED0E8CD2909A6B700CB9F83 /* RecomendationsViewController.swift in Sources */,
