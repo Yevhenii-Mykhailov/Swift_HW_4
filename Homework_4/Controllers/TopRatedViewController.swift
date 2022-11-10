@@ -20,6 +20,7 @@ class TopRatedViewController: UIViewController {
     var arrayOfTopRatedFilmsRealm = TopRatedModel.create(page: 0, results: [], totalPages: 0, totalResults: 0)
     var arrayOfVideos: [VideosResults] = []
     var pageNumber = 1
+    var startPageNumber = 1
     
     var isPaginationOn = false
     
@@ -27,11 +28,18 @@ class TopRatedViewController: UIViewController {
         super.viewDidLoad()
         self.setupTableView()
         
-        getFilmsFromSource(pageNumber)
+        getAllFromRealm()
+        
+        if arrayOfTopRatedFilms != [] {
+            return
+        } else {
+            getFilmsFromSource(startPageNumber)
+        }
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let pos = scrollView.contentOffset.y
+        
         if pos > topRatedTableView.contentSize.height - 320 - scrollView.frame.size.height{
             if !isPaginationOn {
                 pageNumber += 1
@@ -55,7 +63,7 @@ class TopRatedViewController: UIViewController {
             guard let result = response.value else { return }
             self.arrayOfTopRatedFilmsRealm = result
             self.addTopRatedFilmsToRealm(self.arrayOfTopRatedFilmsRealm)
-            self.getFilmsFromDbModel(dbModel: self.getFilmsByPage(pageNumber))
+            self.getFilmsFromDbModel(dbModel: self.getFilmsByPageFromRealm(pageNumber))
             self.topRatedTableView.reloadData()
         }
     }
@@ -65,7 +73,19 @@ class TopRatedViewController: UIViewController {
         self.arrayOfTopRatedFilms.append(contentsOf: (0...19).map { index in filmsFromRealm[index]})
     }
     
-    private func getFilmsByPage(_ pageNumber: Int) -> TopRatedModel {
+    private func getAllFromRealm() {
+        let realmObject = realm.objects(TopRatedModel.self)
+        for (index ,item) in realmObject.enumerated() {
+            let films = item.results
+            pageNumber = index + 1
+            for (_ ,film) in films.enumerated() {
+                self.arrayOfTopRatedFilms.append(film)
+            }
+        }
+        
+    }
+    
+    private func getFilmsByPageFromRealm(_ pageNumber: Int) -> TopRatedModel {
         let realmObject = realm.objects(TopRatedModel.self)
         let ralmQuery = realmObject.where {
             ($0.page == pageNumber)
@@ -83,11 +103,6 @@ class TopRatedViewController: UIViewController {
         })
     }
     
-    
-    
-    
-    
-    //po Realm.Configuration.defaultConfiguration.fileURL
 }
 
 extension TopRatedViewController: UITableViewDataSource, UITableViewDelegate{
@@ -126,8 +141,6 @@ extension TopRatedViewController: UITableViewDataSource, UITableViewDelegate{
             cell.releaseDate = arrayOfTopRatedFilms[indexPath.row].releaseDate.leaveByOffset(offSet: 4)
             cell.filmOverviewText = arrayOfTopRatedFilms[indexPath.row].overview
             cell.posterImageView.load(stringUrl: urlToPosterImage)
-            
-            print(cell.originalTitle + " " + "\(currentRow)")
             return cell
         }
         
